@@ -20,3 +20,4 @@ typedef struct s_player
 }	t_player;
 
 void	deal_card(t_card *(*deck)[52], t_player *player, int amount);
+void	display_cards(t_player *player, t_player *dealer, int dealer_reveal);//DISPLAYS CARDS and total for dealer and player(usually called each turn)
