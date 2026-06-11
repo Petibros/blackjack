@@ -4,7 +4,7 @@ static void	display_card_design(t_card *card)		//CARD DESIGN DEPENDING ON VALUE 
 {
 	switch (card->rank)
 	{
-		case (1) :
+		case (ACE) :
 			printf("ACE ");
 			break ;
 		case (2) :
@@ -34,13 +34,13 @@ static void	display_card_design(t_card *card)		//CARD DESIGN DEPENDING ON VALUE 
 		case (10) :
 			printf("TEN ");
 			break ;
-		case (11) :
+		case (JACK) :
 			printf("JACK ");
 			break ;
-		case (12) :
+		case (QUEEN) :
 			printf("QUEEN ");
 			break ;
-		case (13) :
+		case (KING) :
 			printf("KING ");
 			break ;
 	}
@@ -54,15 +54,11 @@ void	display_cards(t_player *player, t_player *dealer, int dealer_reveal)//DISPL
 	{
 		for (int i = 0 ; i < dealer->hands[0].n_cards ; i++)
 			display_card_design(dealer->hands[0].cards[i]);
-		printf("= ");
-		if (dealer->hands[0].has_ace > 0)			//chooses the displayed total value depending on the aces (1 or 11 for each ace)
-		{
-			printf("%d", dealer->hands[0].total_value - 10 * dealer->hands[0].has_ace);
-			if (dealer->hands[0].total_value - 10 * dealer->hands[0].has_ace + 10 <= 21)
-				printf("/%d", dealer->hands[0].total_value - 10 * dealer->hands[0].has_ace + 10);
-		}
-		else
-			printf("%d", dealer->hands[0].total_value);
+		printf("= %d", dealer->hands[0].total_value);
+
+		//chooses the displayed total value depending on the aces
+		if (dealer->hands[0].has_ace > 0 && dealer->hands[0].total_value + 10 <= 21)
+			printf("/%d", dealer->hands[0].total_value + 10);
 		printf("\n");
 	}
 	else			//only displays dealer's first card
@@ -71,7 +67,7 @@ void	display_cards(t_player *player, t_player *dealer, int dealer_reveal)//DISPL
 		printf("= ");
 		switch (dealer->hands[0].cards[0]->rank)
 		{
-			case (1) :
+			case (ACE) :
 				printf("1/11\n");
 				break ;
 			default :
@@ -85,16 +81,11 @@ void	display_cards(t_player *player, t_player *dealer, int dealer_reveal)//DISPL
 		printf("HAND %d : ", curr_hand + 1);
 		for (int i = 0 ; i < player->hands[curr_hand].n_cards ; i++)
 			display_card_design(player->hands[curr_hand].cards[i]);
-		printf("= ");
-	
-		if (player->hands[curr_hand].has_ace > 0)			//same as for the dealer
-		{
-			printf("%d", player->hands[curr_hand].total_value - 10 * player->hands[curr_hand].has_ace);
-			if (player->hands[curr_hand].total_value - 10 * player->hands[curr_hand].has_ace + 10 <= 21)
-				printf("/%d", player->hands[curr_hand].total_value - 10 * player->hands[curr_hand].has_ace + 10);
-		}
-		else
-			printf("%d", player->hands[curr_hand].total_value);
+		printf("= %d", player->hands[curr_hand].total_value);
+
+		//chooses the displayed total value depending on the aces
+		if (player->hands[curr_hand].has_ace > 0 && player->hands[curr_hand].total_value + 10 <= 21)
+			printf("/%d", player->hands[curr_hand].total_value + 10);
 		printf("\n");
 	}
 }

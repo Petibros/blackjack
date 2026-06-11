@@ -1,7 +1,20 @@
+#ifndef BLACKJACK_H
+#define BLACKJACK_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <fcntl.h>
 #include <unistd.h>
+
+#define ACE		1
+#define JACK	11
+#define QUEEN	12
+#define KING	13
+
+#define ACE_VAL		1
+#define JACK_VAL	10
+#define QUEEN_VAL	10
+#define KING_VAL	10
 
 typedef	struct s_card
 {
@@ -41,3 +54,5 @@ void	bet(t_player *player);	//ASKS the user for a bet amount, 0 < bet <= player.
 int		player_turn(t_player *player, t_card *(*deck)[52], t_player *dealer, int curr_hand);
 void	dealer_turn(t_player *dealer, t_card *(*deck)[52], t_player *player);
 void	deal_card(t_card *(*deck)[52], t_hand *hand, int amount);
+
+#endif

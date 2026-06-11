@@ -21,30 +21,30 @@ t_card *new_card( int rank, int type )			//self-explanatory
 {
 	t_card *new = malloc(sizeof(t_card));
 
-	(void) rank;
+/*	(void) rank;
 	(void) type;
 	new->type = 1;
-	new->rank = 11;					//TEST ONLY
-	new->value = 10;
-/*	new->type = type;
+	new->rank = ACE;					//TEST ONLY
+	new->value = ACE_VAL;*/
+	new->type = type;
 	new->rank = rank;
 	switch (rank)
 	{
-		case (1) :
-			new->value = 11;
+		case (ACE) :
+			new->value = ACE_VAL;
 			break ;
-		case (11) :
-			new->value = 10;
+		case (JACK) :
+			new->value = JACK_VAL;
 			break ;
-		case (12) :
-			new->value = 10;
+		case (QUEEN) :
+			new->value = QUEEN_VAL;
 			break ;
-		case (13) :
-			new->value = 10;
+		case (KING) :
+			new->value = KING_VAL;
 			break ;
 		default :
 			new->value = rank;
-	}*/
+	}
 	return (new);
 }
 
