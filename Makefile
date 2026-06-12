@@ -7,7 +7,8 @@ NAME = bj
 C_FILES = blackjack.c \
 		  game_prep.c \
 		  game_turn.c \
-		  display.c
+		  display.c \
+		  game_end.c
 
 O_FILES = $(C_FILES:.c=.o)
 

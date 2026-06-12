@@ -1,15 +1,20 @@
 #include "blackjack.h"
+#include <stdlib.h>
 #include <strings.h>
 
-void	shuffle_deck(t_card *(*new_deck)[52])	//takes a deck of 52 cards and swaps its content 52 times in ascending order with a random card
+void	shuffle_deck(t_card *(*new_deck)[DECK_CARDS * N_DECKS])	//takes a deck of 52 cards and swaps its content 52 times in ascending order with a random card
 {
-	int	i_swap;
+	long	i_swap;
 	t_card *tmp;
 
-	for (int i = 0 ; i < 52 ; i++)
+	for (int i = 0 ; i < DECK_CARDS * N_DECKS; i++)
 	{
-		i_swap = rand() % 52;
-	//	printf("%d\n", i_swap);
+		i_swap = random();
+		while (i_swap >= LIMIT_RAND)
+			i_swap = random();
+		
+		i_swap = i_swap % (DECK_CARDS * N_DECKS);
+//		printf("%ld\n", i_swap);
 
 		tmp = new_deck[0][i];
 		new_deck[0][i] = new_deck[0][i_swap];
@@ -48,20 +53,22 @@ t_card *new_card( int rank, int type )			//self-explanatory
 	return (new);
 }
 
-void	new_deck(t_card *(*new_deck)[52])		//creates a deck of 52 cards, computes the true value and type of each card
+void	new_deck(t_card *(*new_deck)[DECK_CARDS * N_DECKS])		//creates a deck of 52 cards, computes the true value and type of each card
 {
-	for (int n = 0 ; n < 52 ; n += 4)
+	for (int n_deck = 0; n_deck < DECK_CARDS * N_DECKS; n_deck += 52)
 	{
-		for (int type = 0 ; type < 4 ; type++)
+		for (int n = 0 ; n < DECK_CARDS; n += 4)
 		{
-			new_deck[0][n + type] = new_card(n / 4 + 1, type + 1);
+			for (int type = 0 ; type < 4 ; type++)
+			{
+				new_deck[0][n_deck + n + type] = new_card(n / 4 + 1, type + 1);
+			}
 		}
 	}
 }
 
 void	reset_player(t_player *player)
 {
-	player->money = 500;
 	player->n_hands = 1;
 	
 	for (int i = 0; i < 4; i++)

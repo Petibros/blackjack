@@ -16,6 +16,10 @@
 #define QUEEN_VAL	10
 #define KING_VAL	10
 
+#define N_DECKS		6
+#define DECK_CARDS	52
+#define LIMIT_RAND	2147482647L - (2147482647L % (N_DECKS * DECK_CARDS))
+
 typedef	struct s_card
 {
 	int	rank;
@@ -41,18 +45,20 @@ typedef struct s_player
 }	t_player;
 
 //display.c
-void	display_cards(t_player *player, t_player *dealer, int dealer_reveal);//DISPLAYS CARDS and total for dealer and player(usually called each turn)
+void	display_cards(t_player *player, t_player *dealer);//DISPLAYS CARDS and total for dealer and player(usually called each turn)
 
 //game_prep.c
 void	reset_player(t_player *player);
-void	new_deck(t_card *(*new_deck)[52]);		//creates a deck of 52 cards, computes the true value and type of each card
+void	new_deck(t_card *(*new_deck)[DECK_CARDS * N_DECKS]);		//creates a deck of 52 cards, computes the true value and type of each card
 t_card	*new_card( int rank, int type );			//self-explanatory
-void	shuffle_deck(t_card *(*new_deck)[52]);	//takes a deck of 52 cards and swaps its content 52 times in ascending order with a random card
+void	shuffle_deck(t_card *(*new_deck)[DECK_CARDS * N_DECKS]);	//takes a deck of 52 cards and swaps its content 52 times in ascending order with a random card
 void	bet(t_player *player);	//ASKS the user for a bet amount, 0 < bet <= player.money
 
 //game_turn.c
-int		player_turn(t_player *player, t_card *(*deck)[52], t_player *dealer, int curr_hand);
-void	dealer_turn(t_player *dealer, t_card *(*deck)[52], t_player *player);
-void	deal_card(t_card *(*deck)[52], t_hand *hand, int amount);
+int		player_turn(t_player *player, t_card *(*deck)[DECK_CARDS * N_DECKS], t_player *dealer, int curr_hand);
+void	dealer_turn(t_player *dealer, t_card *(*deck)[DECK_CARDS * N_DECKS], t_player *player);
+void	deal_card(t_card *(*deck)[DECK_CARDS * N_DECKS], t_hand *hand, int amount);
 
+//game_end.c
+void	give_result(t_player *player, t_player *dealer);
 #endif

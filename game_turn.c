@@ -27,7 +27,7 @@ static void	split_hand(t_player *player, t_hand *src, t_hand *dest)
 	dest->bet_amount = src->bet_amount;
 }
 
-int	player_turn(t_player *player, t_card *(*deck)[52], t_player *dealer, int curr_hand)
+int	player_turn(t_player *player, t_card *(*deck)[DECK_CARDS * N_DECKS], t_player *dealer, int curr_hand)
 {
 	char	buf[16];
 	static int		last_move = 2;
@@ -60,7 +60,7 @@ int	player_turn(t_player *player, t_card *(*deck)[52], t_player *dealer, int cur
 		{
 			last_move = 2;
 			deal_card(deck, &player->hands[curr_hand], 1);
-			display_cards(player, dealer, 0);
+			display_cards(player, dealer);
 		}
 		else if (can_double && strncmp("DOUBLE\n", buf, 7) == 0)
 		{
@@ -68,17 +68,17 @@ int	player_turn(t_player *player, t_card *(*deck)[52], t_player *dealer, int cur
 			deal_card(deck, &player->hands[curr_hand], 1);
 			player->money -= player->hands[curr_hand].bet_amount;
 			player->hands[curr_hand].bet_amount *= 2;
-			display_cards(player, dealer, 0);
+			display_cards(player, dealer);
 			break ;
 		}
 		else if (can_split && strncmp("SPLIT\n", buf, 6) == 0)
 		{
 			split_hand(player, &player->hands[curr_hand], &player->hands[player->n_hands]);
 			player->n_hands++;
-			display_cards(player, dealer, 0);
+			display_cards(player, dealer);
 			
 			deal_card(deck, &player->hands[curr_hand], 1);
-			display_cards(player, dealer, 0);
+			display_cards(player, dealer);
 
 			if (player->hands[curr_hand].cards[0]->rank == ACE)
 				break ;
@@ -90,7 +90,7 @@ int	player_turn(t_player *player, t_card *(*deck)[52], t_player *dealer, int cur
 	if (curr_hand < player->n_hands - 1)
 	{
 		deal_card(deck, &player->hands[curr_hand + 1], 1);
-		display_cards(player, dealer, 0);
+		display_cards(player, dealer);
 	
 		if (player->hands[curr_hand + 1].cards[0]->rank != ACE)
 			player_turn(player, deck, dealer, curr_hand + 1);
@@ -99,17 +99,17 @@ int	player_turn(t_player *player, t_card *(*deck)[52], t_player *dealer, int cur
 	return (last_move);
 }
 
-void	dealer_turn(t_player *dealer, t_card *(*deck)[52], t_player *player)
+void	dealer_turn(t_player *dealer, t_card *(*deck)[DECK_CARDS * N_DECKS], t_player *player)
 {
 	while (is_under(&dealer->hands[0], 17) == true)
 	{
 		deal_card(deck, &dealer->hands[0], 1);
-		display_cards(player, dealer, 1);
+		display_cards(player, dealer);
 		sleep(1);
 	}
 }
 
-void	deal_card(t_card *(*deck)[52], t_hand *hand, int amount)
+void	deal_card(t_card *(*deck)[DECK_CARDS * N_DECKS], t_hand *hand, int amount)
 {
 	static int	i = 0;
 
