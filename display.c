@@ -89,52 +89,91 @@ static char*	get_rank(int rank, int pos)
 static void	print_hand(t_hand *hand)
 {
 	for (int i = 0; i < hand->n_cards; i++)
-		printf(" __________________   ");
+		printf("\033[30;47m┌──────────────────┐\033[0m  ");
 	printf("\n");
 	for (int i = 0; i < hand->n_cards; i++)
-		printf("| %s. . .  . . . . |  ", get_rank(hand->cards[i]->rank, 1));
+		printf("\033[30;47m│ %s               │\033[0m  ", get_rank(hand->cards[i]->rank, 1));
 	printf("\n");
 	for (int i = 0; i < hand->n_cards; i++)
-		printf("| . . . .  . . . . |  ");
+		printf("\033[30;47m│                  │\033[0m  ");
 	printf("\n");
 	for (int i = 0; i < hand->n_cards; i++)
-		printf("| . . . .  . . . . |  ");
+		printf("\033[30;47m│                  │\033[0m  ");
 	printf("\n");
 	for (int i = 0; i < hand->n_cards; i++)
-		printf("| . . . .  . . . . |  ");
+		printf("\033[30;47m│                  │\033[0m  ");
 	printf("\n");
 	for (int i = 0; i < hand->n_cards; i++)
-		printf("| . . . .  . . . . |  ");
+		printf("\033[30;47m│                  │\033[0m  ");
 	printf("\n");
 	for (int i = 0; i < hand->n_cards; i++)
-		printf("| . . .      . . . |  ");
+		printf("\033[30;47m│        %s        │\033[0m  ", get_type(hand->cards[i]->type));
 	printf("\n");
 	for (int i = 0; i < hand->n_cards; i++)
-		printf("| . . .  %s  . . . |  ", get_type(hand->cards[i]->type));
+		printf("\033[30;47m│                  │\033[0m  ");
 	printf("\n");
 	for (int i = 0; i < hand->n_cards; i++)
-		printf("| . . . .  . . . . |  ");
+		printf("\033[30;47m│                  │\033[0m  ");
 	printf("\n");
 	for (int i = 0; i < hand->n_cards; i++)
-		printf("| . . . .  . . . . |  ");
+		printf("\033[30;47m│                  │\033[0m  ");
 	printf("\n");
 	for (int i = 0; i < hand->n_cards; i++)
-		printf("| . . . .  . . . . |  ");
+		printf("\033[30;47m│                  │\033[0m  ");
 	printf("\n");
 	for (int i = 0; i < hand->n_cards; i++)
-		printf("| . . . .  . . . . |  ");
+		printf("\033[30;47m│               %s │\033[0m  ", get_rank(hand->cards[i]->rank, 2));
 	printf("\n");
 	for (int i = 0; i < hand->n_cards; i++)
-		printf("| . . . .  . . .%s |  ", get_rank(hand->cards[i]->rank, 2));
+		printf("\033[30;47m└──────────────────┘\033[0m  ");
+	printf("\n");
+/*	for (int i = 0; i < hand->n_cards; i++)
+		printf("┌──────────────────┐  ");
 	printf("\n");
 	for (int i = 0; i < hand->n_cards; i++)
-		printf("|__________________|  ");
+		printf("│ %s               │  ", get_rank(hand->cards[i]->rank, 1));
 	printf("\n");
+	for (int i = 0; i < hand->n_cards; i++)
+		printf("│                  │  ");
+	printf("\n");
+	for (int i = 0; i < hand->n_cards; i++)
+		printf("│                  │  ");
+	printf("\n");
+	for (int i = 0; i < hand->n_cards; i++)
+		printf("│                  │  ");
+	printf("\n");
+	for (int i = 0; i < hand->n_cards; i++)
+		printf("│                  │  ");
+	printf("\n");
+	for (int i = 0; i < hand->n_cards; i++)
+		printf("│        %s        │  ", get_type(hand->cards[i]->type));
+	printf("\n");
+	for (int i = 0; i < hand->n_cards; i++)
+		printf("│                  │  ");
+	printf("\n");
+	for (int i = 0; i < hand->n_cards; i++)
+		printf("│                  │  ");
+	printf("\n");
+	for (int i = 0; i < hand->n_cards; i++)
+		printf("│                  │  ");
+	printf("\n");
+	for (int i = 0; i < hand->n_cards; i++)
+		printf("│                  │  ");
+	printf("\n");
+	for (int i = 0; i < hand->n_cards; i++)
+		printf("│               %s │  ", get_rank(hand->cards[i]->rank, 2));
+	printf("\n");
+	for (int i = 0; i < hand->n_cards; i++)
+		printf("└──────────────────┘  ");
+	printf("\n");*/
+/*	for (int i = 0; i < hand->n_cards; i++)
+		printf("\033[30;47m                    \033[0m  ");
+	printf("\n");*/
 }
 
 void	display_cards(t_player *player, t_player *dealer)//DISPLAYS CARDS and total for dealer and player(usually called each turn)
 {
-	printf("\n\nDEALER = %d", dealer->hands[0].total_value);
+	printf("\n\n\n\n\n\n\n\n\nDEALER = %d", dealer->hands[0].total_value);
 	//chooses the displayed total value depending on the aces
 	if (dealer->hands[0].has_ace > 0 && dealer->hands[0].total_value + 10 <= 21)
 		printf("/%d", dealer->hands[0].total_value + 10);

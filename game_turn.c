@@ -51,18 +51,18 @@ int	player_turn(t_player *player, t_card *(*deck)[DECK_CARDS * N_DECKS], t_playe
 		read(0, buf, 15);
 		buf[15] = 0;
 
-		if (strncmp("STAND\n", buf, 6) == 0)
+		if (strncmp("STAND\n", buf, 6) == 0 || strncmp("stand\n", buf, 6) == 0)
 		{
 			last_move = 1;
 			break ;
 		}
-		else if (strncmp("HIT\n", buf, 4) == 0)
+		else if (strncmp("HIT\n", buf, 4) == 0 || strncmp("hit\n", buf, 4) == 0)
 		{
 			last_move = 2;
 			deal_card(deck, &player->hands[curr_hand], 1);
 			display_cards(player, dealer);
 		}
-		else if (can_double && strncmp("DOUBLE\n", buf, 7) == 0)
+		else if (can_double && (strncmp("DOUBLE\n", buf, 7) == 0 || strncmp("double\n", buf, 7) == 0))
 		{
 			last_move = 3;
 			deal_card(deck, &player->hands[curr_hand], 1);
@@ -71,7 +71,7 @@ int	player_turn(t_player *player, t_card *(*deck)[DECK_CARDS * N_DECKS], t_playe
 			display_cards(player, dealer);
 			break ;
 		}
-		else if (can_split && strncmp("SPLIT\n", buf, 6) == 0)
+		else if (can_split && (strncmp("SPLIT\n", buf, 6) == 0 || strncmp("split\n", buf, 6) == 0))
 		{
 			split_hand(player, &player->hands[curr_hand], &player->hands[player->n_hands]);
 			player->n_hands++;
