@@ -1,75 +1,158 @@
 #include "blackjack.h"
 
-static void	display_card_design(t_card *card)		//CARD DESIGN DEPENDING ON VALUE AND TYPE
+static char*	get_type(int type)
 {
-	switch (card->rank)
+	switch (type)
 	{
-		case (ACE) :
-			printf("ACE ");
-			break ;
+		case (1) :
+			return ("♠️ ");
 		case (2) :
-			printf("TWO ");
-			break ;
+			return ("♥️ ");
 		case (3) :
-			printf("THREE ");
-			break ;
+			return ("♦️ ");
 		case (4) :
-			printf("FOUR ");
-			break ;
-		case (5) :
-			printf("FIVE ");
-			break ;
-		case (6) :
-			printf("SIX ");
-			break ;									//MDR 6-7		ahhhhhhhhh
-		case (7) :
-			printf("SEVEN ");
-			break ;
-		case (8) :
-			printf("EIGHT ");
-			break ;
-		case (9) :
-			printf("NINE ");
-			break ;
-		case (10) :
-			printf("TEN ");
-			break ;
-		case (JACK) :
-			printf("JACK ");
-			break ;
-		case (QUEEN) :
-			printf("QUEEN ");
-			break ;
-		case (KING) :
-			printf("KING ");
-			break ;
+			return ("♣️ ");
 	}
+	return ("0");
+}
+
+static char*	get_rank(int rank, int pos)
+{
+	if (pos == 1)
+	{
+		switch (rank)
+		{
+			case (ACE) :
+				return ("A ");
+			case (2) :
+				return ("2 ");
+			case (3) :
+				return ("3 ");
+			case (4) :
+				return ("4 ");
+			case (5) :
+				return ("5 ");
+			case (6) :
+				return ("6 ");
+			case (7) :									//6-7 AHHHHHHHHHHHHHHHHHHHH
+				return ("7 ");
+			case (8) :
+				return ("8 ");
+			case (9) :
+				return ("9 ");
+			case (10) :
+				return ("10");
+			case (JACK) :
+				return ("J ");
+			case (QUEEN) :
+				return ("Q ");
+			case (KING) :
+				return ("K ");
+		}
+	}
+	else
+	{
+		switch (rank)
+		{
+			case (ACE) :
+				return (" A");
+			case (2) :
+				return (" 2");
+			case (3) :
+				return (" 3");
+			case (4) :
+				return (" 4");
+			case (5) :
+				return (" 5");
+			case (6) :
+				return (" 6");
+			case (7) :									//6-7 AHHHHHHHHHHHHHHHHHHHH
+				return (" 7");
+			case (8) :
+				return (" 8");
+			case (9) :
+				return (" 9");
+			case (10) :
+				return ("10");
+			case (JACK) :
+				return (" J");
+			case (QUEEN) :
+				return (" Q");
+			case (KING) :
+				return (" K");
+		}
+	}
+
+	return ("0");
+}
+
+static void	print_hand(t_hand *hand)
+{
+	for (int i = 0; i < hand->n_cards; i++)
+		printf(" __________________   ");
+	printf("\n");
+	for (int i = 0; i < hand->n_cards; i++)
+		printf("| %s. . .  . . . . |  ", get_rank(hand->cards[i]->rank, 1));
+	printf("\n");
+	for (int i = 0; i < hand->n_cards; i++)
+		printf("| . . . .  . . . . |  ");
+	printf("\n");
+	for (int i = 0; i < hand->n_cards; i++)
+		printf("| . . . .  . . . . |  ");
+	printf("\n");
+	for (int i = 0; i < hand->n_cards; i++)
+		printf("| . . . .  . . . . |  ");
+	printf("\n");
+	for (int i = 0; i < hand->n_cards; i++)
+		printf("| . . . .  . . . . |  ");
+	printf("\n");
+	for (int i = 0; i < hand->n_cards; i++)
+		printf("| . . .      . . . |  ");
+	printf("\n");
+	for (int i = 0; i < hand->n_cards; i++)
+		printf("| . . .  %s  . . . |  ", get_type(hand->cards[i]->type));
+	printf("\n");
+	for (int i = 0; i < hand->n_cards; i++)
+		printf("| . . . .  . . . . |  ");
+	printf("\n");
+	for (int i = 0; i < hand->n_cards; i++)
+		printf("| . . . .  . . . . |  ");
+	printf("\n");
+	for (int i = 0; i < hand->n_cards; i++)
+		printf("| . . . .  . . . . |  ");
+	printf("\n");
+	for (int i = 0; i < hand->n_cards; i++)
+		printf("| . . . .  . . . . |  ");
+	printf("\n");
+	for (int i = 0; i < hand->n_cards; i++)
+		printf("| . . . .  . . .%s |  ", get_rank(hand->cards[i]->rank, 2));
+	printf("\n");
+	for (int i = 0; i < hand->n_cards; i++)
+		printf("|__________________|  ");
+	printf("\n");
 }
 
 void	display_cards(t_player *player, t_player *dealer)//DISPLAYS CARDS and total for dealer and player(usually called each turn)
 {
-	printf("DEALER : ");
-
-	for (int i = 0 ; i < dealer->hands[0].n_cards ; i++)
-		display_card_design(dealer->hands[0].cards[i]);
-	printf("= %d", dealer->hands[0].total_value);
-
+	printf("\n\nDEALER = %d", dealer->hands[0].total_value);
 	//chooses the displayed total value depending on the aces
 	if (dealer->hands[0].has_ace > 0 && dealer->hands[0].total_value + 10 <= 21)
 		printf("/%d", dealer->hands[0].total_value + 10);
 	printf("\n");
 	
-	printf("PLAYER : ");
+	print_hand(&dealer->hands[0]);
+	
+
+	printf("\nPLAYER : \n");
 	for (int curr_hand = 0; curr_hand < player->n_hands; curr_hand++)
 	{
-		printf("HAND %d : ", curr_hand + 1);
-		for (int i = 0 ; i < player->hands[curr_hand].n_cards ; i++)
-			display_card_design(player->hands[curr_hand].cards[i]);
-		printf("= %d", player->hands[curr_hand].total_value);
-
+		printf("HAND %d = %d", curr_hand + 1, player->hands[curr_hand].total_value);
 		//chooses the displayed total value depending on the aces
 		if (player->hands[curr_hand].has_ace > 0 && player->hands[curr_hand].total_value + 10 <= 21)
 			printf("/%d", player->hands[curr_hand].total_value + 10);
 		printf("\n");
+
+		print_hand(&player->hands[curr_hand]);
 	}
+	
 }
