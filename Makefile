@@ -2,7 +2,7 @@ CC = gcc
 
 C_FLAGS = -Wall -Wextra -Werror -g -I .
 
-NAME = bj
+NAME = blackjack
 
 C_FILES = blackjack.c \
 		  game_prep.c \
@@ -27,5 +27,9 @@ fclean: clean
 
 clean:
 	rm -f $(O_FILES)
+
+run: $(NAME)
+	./$(NAME)
+
 
 .PHONY: all clean fclean re

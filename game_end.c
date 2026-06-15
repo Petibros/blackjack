@@ -2,7 +2,7 @@
 
 void	give_result(t_player *player, t_player *dealer)
 {
-	int	gain = 0;
+	int	gain;
 	int	player_res[4];
 	int	dealer_res = dealer->hands[0].total_value;
 	if (dealer->hands[0].has_ace && dealer_res + 10 <= 21)
@@ -15,6 +15,7 @@ void	give_result(t_player *player, t_player *dealer)
 
 	for (int i = 0; i < player->n_hands; i++)
 	{
+		gain = 0;
 		player_res[i] = player->hands[i].total_value;
 		if (player->hands[i].has_ace && player_res[i] + 10 <= 21)
 			player_res[i] += 10;

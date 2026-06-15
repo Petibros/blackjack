@@ -173,7 +173,7 @@ static void	print_hand(t_hand *hand)
 
 void	display_cards(t_player *player, t_player *dealer)//DISPLAYS CARDS and total for dealer and player(usually called each turn)
 {
-	printf("\n\n\n\n\n\n\n\n\nDEALER = %d", dealer->hands[0].total_value);
+	printf("\n\n\n\n\n\n\n\n\n\n\nDEALER = %d", dealer->hands[0].total_value);
 	//chooses the displayed total value depending on the aces
 	if (dealer->hands[0].has_ace > 0 && dealer->hands[0].total_value + 10 <= 21)
 		printf("/%d", dealer->hands[0].total_value + 10);

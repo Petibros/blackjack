@@ -33,8 +33,11 @@ int	main()
 		display_cards(&player, &dealer);
 
 		player_turn(&player, &deck, &dealer, 0);
+	
 		deal_card(&deck, &dealer.hands[0], 1);							//SECOND DEALER CARD
 		display_cards(&player, &dealer);
+		sleep(1);
+	
 		dealer_turn(&dealer, &deck, &player);
 
 		give_result(&player, &dealer);
@@ -68,7 +71,7 @@ int	main()
 				free(deck[i]);
 		}
 
-		printf("Continue ? : [Y/n]\n");
+		printf("\nContinue ? : [Y/n]\n");
 		read(0, buf, 2);
 		buf[2] = 0;
 	} while (strncmp(buf, "y\n", 2) == 0 || strncmp(buf, "Y\n", 2) == 0 || strncmp(buf, "\n", 1) == 0);	
