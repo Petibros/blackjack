@@ -46,6 +46,7 @@ typedef struct s_player
 
 //display.c
 void	display_cards(t_player *player, t_player *dealer);//DISPLAYS CARDS and total for dealer and player(usually called each turn)
+void	show_rules( void );
 
 //game_prep.c
 void	reset_player(t_player *player);

@@ -192,6 +192,14 @@ void	display_cards(t_player *player, t_player *dealer)//DISPLAYS CARDS and total
 		printf("\n");
 
 		print_hand(&player->hands[curr_hand]);
-	}
-	
+		printf("\n");
+	}	
+}
+
+void	show_rules(void)
+{
+	printf(" ____________________________        ______________________\n");
+	printf("/                            \\      /                      \\\n");
+	printf("|  DEALER stands on soft 17  |      |  BLACKJACK pays 3:2  |\n");
+	printf("\\____________________________/      \\______________________/\n\n");
 }

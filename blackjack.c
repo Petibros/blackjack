@@ -25,13 +25,15 @@ int	main()
 		reset_player(&player);
 		reset_player(&dealer);
 
+		show_rules();
+
 		bet(&player);									//ASK FOR BET
-		deal_card(&deck, &player.hands[0], 2);					//DEALS 2 CARDS TO PLAYER AND DEAELR
+		deal_card(&deck, &player.hands[0], 2);					//DEALS 2 CARDS TO PLAYER AND 1 TO DEALER (NO HOLE CARD)
 		deal_card(&deck, &dealer.hands[0], 1);
 		display_cards(&player, &dealer);
 
 		player_turn(&player, &deck, &dealer, 0);
-		deal_card(&deck, &dealer.hands[0], 1);
+		deal_card(&deck, &dealer.hands[0], 1);							//SECOND DEALER CARD
 		display_cards(&player, &dealer);
 		dealer_turn(&dealer, &deck, &player);
 

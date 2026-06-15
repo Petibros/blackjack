@@ -2,6 +2,7 @@
 
 void	give_result(t_player *player, t_player *dealer)
 {
+	int	gain = 0;
 	int	player_res[4];
 	int	dealer_res = dealer->hands[0].total_value;
 	if (dealer->hands[0].has_ace && dealer_res + 10 <= 21)
@@ -24,11 +25,18 @@ void	give_result(t_player *player, t_player *dealer)
 
 		if (player_res[i] > dealer_res)
 		{
-			player->money += player->hands[i].bet_amount * 2;
+			gain += player->hands[i].bet_amount * 2;
 			if (player_res[i] == 22)
-				player->money += player->hands[i].bet_amount / 2;
+				gain += player->hands[i].bet_amount / 2;
+			printf("HAND %d : WIN = +%d\n", i + 1, gain - player->hands[i].bet_amount);
 		}
 		else if (player_res[i] == dealer_res && player_res[i] != -1)
+		{
 			player->money += player->hands[i].bet_amount;
+			printf("HAND %d : PUSH\n", i + 1);
+		}
+		else
+			printf("HAND %d : LOSE\n", i + 1);
+		player->money += gain;
 	}
 }
