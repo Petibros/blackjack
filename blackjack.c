@@ -13,28 +13,40 @@ int	main()
 
 	player.money = 500;
 	int fd = open("/dev/random", O_RDONLY);			//SEED GEN (for shuffling)
-	read(fd, seed, 1);
+	if (fd < 0 || read(fd, seed, 1) < 0)
+	{
+		perror("problem attempting to read /dev/random");
+		return (1);
+	}
 	close(fd);
 	srandom(seed[0]);
 
 	do
 	{
-		new_deck(&deck);									//DECK CREATION
-		shuffle_deck(&deck);								//SHUFFLE
-	
 		reset_player(&player);
 		reset_player(&dealer);
-
+		
+		//deck creation and shuffle
+		if (new_deck(&deck) == 1)
+		{
+			free_cards(&deck, &player, &dealer);
+			return (1);
+		}
+		shuffle_deck(&deck);
+		
 		show_rules();
+		//asks for wanted bet amount
+		bet(&player);
 
-		bet(&player);									//ASK FOR BET
-		deal_card(&deck, &player.hands[0], 2);					//DEALS 2 CARDS TO PLAYER AND 1 TO DEALER (NO HOLE CARD)
+		//deals 2 cards to the player and 1 to the dealer (NO HOLE CARD RULE)
+		deal_card(&deck, &player.hands[0], 2);					
 		deal_card(&deck, &dealer.hands[0], 1);
 		display_cards(&player, &dealer);
 
 		player_turn(&player, &deck, &dealer, 0);
-	
-		deal_card(&deck, &dealer.hands[0], 1);							//SECOND DEALER CARD
+
+		//second dealer card
+		deal_card(&deck, &dealer.hands[0], 1);
 		display_cards(&player, &dealer);
 		sleep(1);
 	
@@ -55,21 +67,7 @@ int	main()
 			}
 		}*/
 
-		for (int i = 0 ; i < DECK_CARDS * N_DECKS; i++ )
-		{
-			if (i < 16)
-			{
-				for (int curr_hand = 0; curr_hand < player.n_hands; curr_hand++)
-				{
-					if (player.hands[curr_hand].cards[i])
-						free(player.hands[curr_hand].cards[i]);
-				}
-				if (dealer.hands[0].cards[i])
-					free(dealer.hands[0].cards[i]);
-			}
-			if (deck[i])
-				free(deck[i]);
-		}
+		free_cards(&deck, &player, &dealer);
 
 		printf("\nContinue ? : [Y/n]\n");
 		read(0, buf, 2);

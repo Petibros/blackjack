@@ -16,7 +16,7 @@
 #define QUEEN_VAL	10
 #define KING_VAL	10
 
-#define N_DECKS		6
+#define N_DECKS		3
 #define DECK_CARDS	52
 #define LIMIT_RAND	2147482647L - (2147482647L % (N_DECKS * DECK_CARDS))
 
@@ -50,7 +50,7 @@ void	show_rules( void );
 
 //game_prep.c
 void	reset_player(t_player *player);
-void	new_deck(t_card *(*new_deck)[DECK_CARDS * N_DECKS]);		//creates a deck of 52 cards, computes the true value and type of each card
+int		new_deck(t_card *(*new_deck)[DECK_CARDS * N_DECKS]);		//creates a deck of 52 cards, computes the true value and type of each card
 t_card	*new_card( int rank, int type );			//self-explanatory
 void	shuffle_deck(t_card *(*new_deck)[DECK_CARDS * N_DECKS]);	//takes a deck of 52 cards and swaps its content 52 times in ascending order with a random card
 void	bet(t_player *player);	//ASKS the user for a bet amount, 0 < bet <= player.money
@@ -62,4 +62,5 @@ void	deal_card(t_card *(*deck)[DECK_CARDS * N_DECKS], t_hand *hand, int amount);
 
 //game_end.c
 void	give_result(t_player *player, t_player *dealer);
+void	free_cards(t_card *(*deck)[DECK_CARDS * N_DECKS], t_player *player, t_player *dealer);
 #endif

@@ -41,3 +41,22 @@ void	give_result(t_player *player, t_player *dealer)
 		player->money += gain;
 	}
 }
+
+void	free_cards(t_card *(*deck)[DECK_CARDS * N_DECKS], t_player *player, t_player *dealer)
+{
+	for (int i = 0 ; i < DECK_CARDS * N_DECKS; i++ )
+	{
+		if (i < 16)
+		{
+			for (int curr_hand = 0; curr_hand < player->n_hands; curr_hand++)
+			{
+				if (player->hands[curr_hand].cards[i])
+					free(player->hands[curr_hand].cards[i]);
+			}
+			if (dealer->hands[0].cards[i])
+				free(dealer->hands[0].cards[i]);
+		}
+		if (deck[i])
+			free(deck[i]);
+	}
+}

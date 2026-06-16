@@ -26,11 +26,15 @@ t_card *new_card( int rank, int type )			//self-explanatory
 {
 	t_card *new = malloc(sizeof(t_card));
 
-/*	(void) rank;
+	if (!new)
+		return (NULL);
+
+	/*	(void) rank;
 	(void) type;
 	new->type = 1;
 	new->rank = ACE;					//TEST ONLY
 	new->value = ACE_VAL;*/
+
 	new->type = type;
 	new->rank = rank;
 	switch (rank)
@@ -53,8 +57,10 @@ t_card *new_card( int rank, int type )			//self-explanatory
 	return (new);
 }
 
-void	new_deck(t_card *(*new_deck)[DECK_CARDS * N_DECKS])		//creates a deck of 52 cards, computes the true value and type of each card
+int	new_deck(t_card *(*new_deck)[DECK_CARDS * N_DECKS])		//creates a deck of 52 cards, computes the true value and type of each card
 {
+	bzero(new_deck, sizeof(t_card *) * DECK_CARDS * N_DECKS);
+
 	for (int n_deck = 0; n_deck < DECK_CARDS * N_DECKS; n_deck += 52)
 	{
 		for (int n = 0 ; n < DECK_CARDS; n += 4)
@@ -62,9 +68,12 @@ void	new_deck(t_card *(*new_deck)[DECK_CARDS * N_DECKS])		//creates a deck of 52
 			for (int type = 0 ; type < 4 ; type++)
 			{
 				new_deck[0][n_deck + n + type] = new_card(n / 4 + 1, type + 1);
+				if (new_deck[0][n_deck + n + type] == NULL)
+					return (1);
 			}
 		}
 	}
+	return (0);
 }
 
 void	reset_player(t_player *player)
