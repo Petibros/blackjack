@@ -73,7 +73,7 @@ void	free_cards(t_card *(*deck)[DECK_CARDS * N_DECKS], t_player *player, t_playe
 				free(dealer->hands[0].cards[i]);
 		}
 		//checks for a card to free at index = i in deck
-		if (deck[i])
-			free(deck[i]);
+		if (deck[0][i])
+			free(deck[0][i]);
 	}
 }

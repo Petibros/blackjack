@@ -1,14 +1,14 @@
 CC = gcc
 
-C_FLAGS = -Wall -Wextra -Werror -g -I .
+C_FLAGS = -Wall -Wextra -Werror -g -I inc/
 
 NAME = blackjack
 
-C_FILES = blackjack.c \
-		  game_prep.c \
-		  game_turn.c \
-		  display.c \
-		  game_end.c
+C_FILES = src/blackjack.c \
+		  src/game_prep.c \
+		  src/game_turn.c \
+		  src/display.c \
+		  src/game_end.c
 
 O_FILES = $(C_FILES:.c=.o)
 
