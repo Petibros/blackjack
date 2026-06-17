@@ -12,7 +12,9 @@ int	main()
 	char		buf[3];
 
 	player.money = 500;
-	int fd = open("/dev/random", O_RDONLY);			//SEED GEN (for shuffling)
+
+	//seed gen (shuffle calls rand())
+	int fd = open("/dev/random", O_RDONLY);
 	if (fd < 0 || read(fd, seed, 1) < 0)
 	{
 		perror("problem attempting to read /dev/random");
@@ -43,6 +45,7 @@ int	main()
 		deal_card(&deck, &dealer.hands[0], 1);
 		display_cards(&player, &dealer);
 
+		//player draws until STAND or 21
 		player_turn(&player, &deck, &dealer, 0);
 
 		//second dealer card
@@ -50,27 +53,17 @@ int	main()
 		display_cards(&player, &dealer);
 		sleep(1);
 	
+		//dealer draws until 17
 		dealer_turn(&dealer, &deck, &player);
 
+		//gives earnings for the turn
 		give_result(&player, &dealer);
-/*		
-		for (int i = 0 ; i < DECK_CARDS * N_DECKS; i++)
-		{
-			if (deck[i])
-				printf("value : %d, type : %d  CARD %d\n", deck[i]->value, deck[i]->type, i + 1);
-			if (i < 16)
-			{
-				if (player.hands[0].cards[i])
-					printf("value : %d, type : %d  CARD %d\n", player.hands[0].cards[i]->value, player.hands[0].cards[i]->type, i + 1);
-				if (dealer.hands[0].cards[i])
-					printf("value : %d, type : %d  CARD %d\n", dealer.hands[0].cards[i]->value, dealer.hands[0].cards[i]->type, i + 1);
-			}
-		}*/
 
+		//frees cards for this turn
 		free_cards(&deck, &player, &dealer);
 
 		printf("\nContinue ? : [Y/n]\n");
 		read(0, buf, 2);
 		buf[2] = 0;
-	} while (strncmp(buf, "y\n", 2) == 0 || strncmp(buf, "Y\n", 2) == 0 || strncmp(buf, "\n", 1) == 0);	
+	} while ((strncmp(buf, "y\n", 2) == 0 || strncmp(buf, "Y\n", 2) == 0 || strncmp(buf, "\n", 1) == 0) && player.money > 0);	
 }
