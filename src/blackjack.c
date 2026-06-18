@@ -7,21 +7,19 @@
 int	main()
 {
 	t_card		*deck[DECK_CARDS * N_DECKS];
-	char		seed[1];
 	t_player	dealer, player;
+	t_bindings	bindings;
 	char		buf[3];
-
+	
 	player.money = 500;
-
-	//seed gen (shuffle calls rand())
-	int fd = open("/dev/random", O_RDONLY);
-	if (fd < 0 || read(fd, seed, 1) < 0)
+	
+	if  (gen_seed() == 1)
+		return (1);
+	else if (get_bindings(&bindings) == 1)
 	{
-		perror("problem attempting to read /dev/random");
+		perror("problem while attempting to read 'bindings.txt'");
 		return (1);
 	}
-	close(fd);
-	srandom(seed[0]);
 
 	do
 	{
@@ -46,7 +44,8 @@ int	main()
 		display_cards(&player, &dealer);
 
 		//player draws until STAND or 21
-		player_turn(&player, &deck, &dealer, 0);
+		if (player_turn(&player, &deck, &dealer, 0) != 1)
+			sleep(1);
 
 		//second dealer card
 		deal_card(&deck, &dealer.hands[0], 1);

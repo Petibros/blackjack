@@ -92,6 +92,7 @@ int	player_turn(t_player *player, t_card *(*deck)[DECK_CARDS * N_DECKS], t_playe
 			split_hand(player, &player->hands[curr_hand], &player->hands[player->n_hands]);
 			player->n_hands++;
 			display_cards(player, dealer);
+			sleep(1);
 			//a card is automatically dealt to current hand after a split	
 			deal_card(deck, &player->hands[curr_hand], 1);
 			display_cards(player, dealer);
@@ -105,6 +106,8 @@ int	player_turn(t_player *player, t_card *(*deck)[DECK_CARDS * N_DECKS], t_playe
 	//checks if there are still hands to play
 	if (curr_hand < player->n_hands - 1)
 	{
+		if (last_move != 1)
+			sleep(1);
 		//at the end of the current hand, if a split has occured, the second card is dealt to the new hand
 		deal_card(deck, &player->hands[curr_hand + 1], 1);
 		display_cards(player, dealer);
