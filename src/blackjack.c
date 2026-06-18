@@ -44,7 +44,7 @@ int	main()
 		display_cards(&player, &dealer);
 
 		//player draws until STAND or 21
-		if (player_turn(&player, &deck, &dealer, 0) != 1)
+		if (player_turn(&player, &deck, &dealer, &bindings) != 1)
 			sleep(1);
 
 		//second dealer card

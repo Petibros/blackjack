@@ -1,0 +1,10 @@
+single-key action binding
+
+STAND = 's'
+SPLIT = 'p'
+HIT = 'h'
+DOUBLE = 'd'
+HAND 1 = '1'
+HAND 2 = '2'
+HAND 3 = '3'
+HAND 4 = '4'

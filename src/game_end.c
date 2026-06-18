@@ -3,6 +3,7 @@
 void	give_result(t_player *player, t_player *dealer)
 {
 	int	earnings;
+	int	total_earnings = 0;
 
 	//takes the highest value under 21 (ace value is either 1 or 11 but counted as 1 in total_value)
 	int	dealer_res = dealer->hands[0].total_value;
@@ -52,9 +53,15 @@ void	give_result(t_player *player, t_player *dealer)
 		}
 		else
 			//lose -> bet lost
-			printf("HAND %d : LOSE\n", i + 1);
+			printf("HAND %d : LOSE = -%d\n", i + 1, player->hands[i].bet_amount);
 		player->money += earnings;
+		total_earnings += earnings - player->hands[i].bet_amount;
 	}
+	printf("-------------------------------\n");
+	if (total_earnings < 0)
+		printf("TOTAL = %d\n", total_earnings);
+	else
+		printf("TOTAL = +%d\n", total_earnings);
 }
 
 void	free_cards(t_card *(*deck)[DECK_CARDS * N_DECKS], t_player *player, t_player *dealer)

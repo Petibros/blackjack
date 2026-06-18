@@ -1,111 +1,65 @@
 #include "blackjack.h"
-#include <stdlib.h>
-#include <strings.h>
+#include <stdio.h>
+#include <string.h>
 
-void	shuffle_deck(t_card *(*new_deck)[DECK_CARDS * N_DECKS])
+int	gen_seed( void )
 {
-	long	i_swap;
-	t_card *tmp;
-
-	for (int i = 0 ; i < DECK_CARDS * N_DECKS; i++)
+	char		seed[1];
+	
+	//seed gen (shuffle calls rand())
+	int fd = open("/dev/random", O_RDONLY);
+	if (fd < 0 || read(fd, seed, 1) < 0)
 	{
-		//okay this one is a bit tricky				//By performing a % operation on an integer I essentially divide this integer into equal parts, the thing
-		i_swap = random();							//is that random_max isn't divisible by every number.
-		while (i_swap >= LIMIT_RAND)				//For example : random_MAX = 18, divide by 7 and take the rest -> 2 chances to get 6 -> i_swap = (6, 13)
-			i_swap = random();						//and 3 chances to get 2 -> i_swap = (2, 9, 16). So to get equal chances for every number i have to crop
-													//the max -> if I redraw for every number number bigger than 13 then I have equal chances for every number
-		i_swap = i_swap % (DECK_CARDS * N_DECKS);	//including 0. That's the exact same for RANDOM_MAX. 
-													//so LIMIT_RAND = the max number in RANDOM_MAX divisible by DECK_CARDS * N_DECKS.
-		tmp = new_deck[0][i];
-		new_deck[0][i] = new_deck[0][i_swap];
-		new_deck[0][i_swap] = tmp;
+		perror("problem attempting to read '/dev/random'");
+		return (1);
 	}
-}
-
-t_card *new_card( int rank, int type )
-{
-	t_card *new = malloc(sizeof(t_card));
-	if (!new)
-		return (NULL);
-
-	new->type = type;
-	new->rank = rank;
-	//rank decides value -> a queen's rank is 12 but its value 10
-	switch (rank)
-	{
-		case (ACE) :
-			new->value = ACE_VAL;
-			break ;
-		case (JACK) :
-			new->value = JACK_VAL;
-			break ;
-		case (QUEEN) :
-			new->value = QUEEN_VAL;
-			break ;
-		case (KING) :
-			new->value = KING_VAL;
-			break ;
-		default :
-			new->value = rank;
-	}
-	return (new);
-}
-
-int	new_deck(t_card *(*new_deck)[DECK_CARDS * N_DECKS])
-{
-	bzero(new_deck, sizeof(t_card *) * DECK_CARDS * N_DECKS);
-
-	//loops for each deck (N_DECKS times)
-	for (int n_deck = 0; n_deck < DECK_CARDS * N_DECKS; n_deck += 52)
-	{
-		//loops for each rank (13 times)
-		for (int n = 0 ; n < DECK_CARDS; n += 4)
-		{
-			//loops for each type (4 times)
-			for (int type = 0 ; type < 4 ; type++)
-			{
-				//rank starts at 1 so n / n_types(4) + 1, type also starts at 1
-				new_deck[0][n_deck + n + type] = new_card(n / 4 + 1, type + 1);
-				if (new_deck[0][n_deck + n + type] == NULL)
-					return (1);
-			}
-		}
-	}
+	close(fd);
+	srandom(seed[0]);
 	return (0);
 }
 
-void	reset_player(t_player *player)
+int	get_bindings(t_bindings *bindings)
 {
-	//do I really have to explain something here ?
-	player->n_hands = 1;
-		
-	for (int i = 0; i < 4; i++)
-	{
-		bzero(player->hands[i].cards, sizeof(t_card *) * 16);
-		player->hands[i].total_value = 0;
-		player->hands[i].bet_amount = 0;
-		player->hands[i].n_cards = 0;
-		player->hands[i].has_ace = 0;
-	}
+	char	buf[2048];
+	char	*ptr;
+	int		fd = open("bindings.txt", O_RDONLY);
+
+	if (fd == -1 || read(fd, buf, 2047) < 0)
+		return (1);
+	buf[2047] = 0;
+
+	ptr = strstr(buf, "STAND = '");
+	if (!ptr)
+		return (1);
+	bindings->STAND = ptr[strlen("STAND = '")];
+	ptr = strstr(buf, "HIT = '");
+	if (!ptr)
+		return (1);
+	bindings->HIT = ptr[strlen("HIT = '")];
+	ptr = strstr(buf, "SPLIT = '");
+	if (!ptr)
+		return (1);
+	bindings->SPLIT = ptr[strlen("SPLIT = '")];
+	ptr = strstr(buf, "DOUBLE = '");
+	if (!ptr)
+		return (1);
+	bindings->DOUBLE = ptr[strlen("DOUBLE = '")];
+	ptr = strstr(buf, "HAND 1 = '");
+	if (!ptr)
+		return (1);
+	bindings->HAND_1 = ptr[strlen("HAND 1 = '")];
+	ptr = strstr(buf, "HAND 2 = '");
+	if (!ptr)
+		return (1);
+	bindings->HAND_2 = ptr[strlen("HAND 2 = '")];
+	ptr = strstr(buf, "HAND 3 = '");
+	if (!ptr)
+		return (1);
+	bindings->HAND_3 = ptr[strlen("HAND 3 = '")];
+	ptr = strstr(buf, "HAND 4 = '");
+	if (!ptr)
+		return (1);
+	bindings->HAND_4 = ptr[strlen("HAND 4 = '")];
+	
+	return (0);
 }
-
-void	bet(t_player *player)
-{
-	char	buf[16];
-	int		bet;
-
-	//asks wanted bet_amount until user's input is valid
-	while (1)
-	{
-		printf("MONEY : %d, your BET ?\n", player->money);
-		read(0, buf, 16);
-		bet = atoi(buf);
-		if (bet > 0 && bet <= player->money)
-		{
-			player->money -= bet;
-			player->hands[0].bet_amount = bet;
-			break ;
-		}
-	}
-}
-
