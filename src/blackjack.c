@@ -40,7 +40,8 @@ int	main()
 		shuffle_deck(&deck);		
 
 		//deals 2 cards to the player and 1 to the dealer (NO HOLE CARD RULE)
-		deal_card(&deck, &player.hands[0], 2);					
+		deal_card(&deck, &player.hands[0], 2);
+		player.hands[0].in_play = true;
 		deal_card(&deck, &dealer.hands[0], 1);
 		display_cards(&player, &dealer);
 

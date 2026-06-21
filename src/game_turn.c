@@ -2,6 +2,13 @@
 #include <string.h>
 #include <stdbool.h>
 
+static bool	is_switch(char buf[16], char binding)
+{
+	if (strncmp("SWITCH\n", buf, 7) == 0 || strncmp("switch\n", buf, 7) == 0 || (buf[0] == binding && buf[1] == '\n'))
+		return (true);
+	return (false);
+}
+
 static bool	is_stand(char buf[16], char binding)
 {
 	if (strncmp("STAND\n", buf, 6) == 0 || strncmp("stand\n", buf, 6) == 0 || (buf[0] == binding && buf[1] == '\n'))
@@ -39,6 +46,39 @@ static bool	is_under(t_hand *hand, int max)
 	return (false);
 }
 
+//at the end of the turn lets the player choose which hand to play
+static void	choose_hand(t_player *player, t_bindings *bindings)
+{
+	char	buf[16];
+
+
+	printf("CHOOSE HAND TO PLAY     ");
+	if (player->hands[0].in_play == true)
+		printf("  1 : '%c'", bindings->HAND_1);
+	if (player->hands[1].in_play == true)
+		printf("  2 : '%c'", bindings->HAND_2);
+	if (player->hands[2].in_play == true)
+		printf("  3 : '%c'", bindings->HAND_3);
+	if (player->hands[3].in_play == true)
+		printf("  4 : '%c'", bindings->HAND_4);
+	printf("\n");
+
+	read(0, buf, 15);
+	buf[15] = 0;
+
+	//hand must be under 21 and existing
+	if (buf[0] == bindings->HAND_1 && buf[1] == '\n' && 1 <= player->n_hands && player->hands[0].in_play == true)
+		player->curr_hand = 0;
+	else if (buf[0] == bindings->HAND_2 && buf[1] == '\n' && 2 <= player->n_hands && player->hands[1].in_play == true)
+		player->curr_hand = 1;
+	else if (buf[0] == bindings->HAND_3 && buf[1] == '\n' && 3 <= player->n_hands && player->hands[2].in_play == true)
+		player->curr_hand = 2;
+	else if (buf[0] == bindings->HAND_4 && buf[1] == '\n' && 4 <= player->n_hands && player->hands[3].in_play == true)
+		player->curr_hand = 3;
+	else
+		printf("Can't switch, hand total over or egal to 21 or non existant\n");
+}
+
 static void	split_hand(t_player *player, t_hand *src, t_hand *dest)
 {
 	src->total_value -= src->cards[1]->value;
@@ -69,20 +109,22 @@ int	player_turn(t_player *player, t_card *(*deck)[DECK_CARDS * N_DECKS], t_playe
 	//while under 21 or until stand
 	while (is_under(&player->hands[player->curr_hand], 21) == true)
 	{
-		printf("STAND, HIT");
+		printf("STAND (end turn) : %c, HIT : %c", bindings->STAND, bindings->HIT);
 		//can double only if 2 cards in the hand and enough money
 		if (player->hands[player->curr_hand].bet_amount <= player->money && player->hands[player->curr_hand].n_cards == 2)
 		{
 			can_double = true;
-			printf(", DOUBLE");
+			printf(", DOUBLE : %c", bindings->DOUBLE);
 			//same as for double + can split max 3 times for 4 hands total
 			if (player->hands[player->curr_hand].cards[0]->value == player->hands[player->curr_hand].cards[1]->value && player->n_hands <= 3)
 			{
 				can_split = true;
-				printf(", SPLIT");
+				printf(", SPLIT : %c", bindings->SPLIT);
 			}
 		}
-		printf(" : \n");
+		if (player->n_hands > 1 && (player->hands[0].in_play == true || player->hands[1].in_play == true || player->hands[2].in_play == true || player->hands[3].in_play == true))
+			printf(", SWITCH HAND : %c", bindings->SWITCH);
+		printf("\n");
 		read(0, buf, 15);
 		buf[15] = 0;
 
@@ -90,6 +132,10 @@ int	player_turn(t_player *player, t_card *(*deck)[DECK_CARDS * N_DECKS], t_playe
 		{
 			//stand ends the player's turn
 			last_move = 1;
+			player->hands[0].in_play = false;
+			player->hands[1].in_play = false;
+			player->hands[2].in_play = false;
+			player->hands[3].in_play = false;
 			break ;
 		}
 		else if (is_hit(buf, bindings->HIT))
@@ -113,31 +159,50 @@ int	player_turn(t_player *player, t_card *(*deck)[DECK_CARDS * N_DECKS], t_playe
 		{
 			//splits the hand in two and duplicates the bet_amount to both hands
 			split_hand(player, &player->hands[player->curr_hand], &player->hands[player->n_hands]);
+			player->hands[player->n_hands].in_play = true;
 			player->n_hands++;
 			display_cards(player, dealer);
 			sleep(1);
-			//a card is automatically dealt to current hand after a split	
+			//a card is automatically dealt to both hands after a split	
 			deal_card(deck, &player->hands[player->curr_hand], 1);
 			display_cards(player, dealer);
+			sleep(1);
+			deal_card(deck, &player->hands[player->n_hands - 1], 1);
+			display_cards(player, dealer);
+
 			//on an aces split the player's turn ends after both hands have received 1 more card
 			if (player->hands[player->curr_hand].cards[0]->rank == ACE)
+			{
+				player->hands[player->n_hands - 1].in_play = false;
 				break ;
+			}
 
 			last_move = 4;
 		}
+		else if (player->n_hands > 1 && is_switch(buf, bindings->SWITCH))
+		{
+			choose_hand(player, bindings);
+			last_move = 5;
+		}
 	}
+	player->hands[player->curr_hand].in_play = false;
+
 	//checks if there are still hands to play
-	if (player->curr_hand < player->n_hands - 1)
+	if (player->n_hands > 1) 
 	{
-		if (last_move != 1)
-			sleep(1);
-		//at the end of the current hand, if a split has occured, the second card is dealt to the new hand
-		player->curr_hand += 1;
-		deal_card(deck, &player->hands[player->curr_hand], 1);
+		if (player->hands[0].in_play == true)
+			player->curr_hand = 0;
+		else if (player->hands[1].in_play == true)
+			player->curr_hand = 1;
+		else if (player->hands[2].in_play == true)
+			player->curr_hand = 2;
+		else if (player->hands[3].in_play == true)
+			player->curr_hand = 3;
+		else
+			return (last_move);
+		sleep(1);
 		display_cards(player, dealer);
-		//checks for an aces split
-		if (player->hands[player->curr_hand].cards[0]->rank != ACE)
-			player_turn(player, deck, dealer, bindings);
+		player_turn(player, deck, dealer, bindings);
 	}
 
 	return (last_move);

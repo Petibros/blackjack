@@ -89,6 +89,7 @@ void	reset_player(t_player *player)
 		player->hands[i].bet_amount = 0;
 		player->hands[i].n_cards = 0;
 		player->hands[i].has_ace = 0;
+		player->hands[i].in_play = false;
 	}
 }
 

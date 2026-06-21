@@ -28,6 +28,10 @@ int	get_bindings(t_bindings *bindings)
 		return (1);
 	buf[2047] = 0;
 
+	ptr = strstr(buf, "SWITCH = '");
+	if (!ptr)
+		return (1);
+	bindings->SWITCH = ptr[strlen("SWITCH = '")];
 	ptr = strstr(buf, "STAND = '");
 	if (!ptr)
 		return (1);

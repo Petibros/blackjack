@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <stdbool.h>
 
 #define ACE		1
 #define JACK	11
@@ -26,6 +27,7 @@ typedef struct s_bindings
 	char	HIT;
 	char	DOUBLE;
 	char	SPLIT;
+	char	SWITCH;
 	char	HAND_1;
 	char	HAND_2;
 	char	HAND_3;
@@ -46,6 +48,7 @@ typedef struct s_hand
 	struct s_card	*cards[16];
 	int				n_cards;
 	int				total_value;
+	bool			in_play;
 }	t_hand;
 
 typedef struct s_player

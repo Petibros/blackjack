@@ -82,7 +82,7 @@ static void	add_padding(int n_spaces)
 		printf(" ");
 }
 
-static void	print_split_hands(t_hand *first, t_hand *second, int pair)
+static void	print_split_hands(t_hand *first, t_hand *second, int pair, int current)
 {
 	int	padding_text = 88;
 
@@ -90,6 +90,11 @@ static void	print_split_hands(t_hand *first, t_hand *second, int pair)
 		return ;
 
 	//displays total_value and padding for the text
+	if (current == 1 + pair * 2)
+	{
+		printf("CURRENT : ");
+		padding_text -= 10;
+	}
 	printf("HAND %d = %d", 1 + pair * 2, first->total_value);
 	if (first->total_value / 10 >= 1)
 		padding_text--;
@@ -101,6 +106,8 @@ static void	print_split_hands(t_hand *first, t_hand *second, int pair)
 	if (second != NULL)
 	{
 		add_padding(padding_text);
+		if (current == 2 + pair * 2)
+			printf("CURRENT : ");
 		printf("HAND %d = %d", 2 + pair * 2, second->total_value);
 		if (second->has_ace > 0 && second->total_value + 10 <= 21)
 			printf("/%d", second->total_value + 10);
@@ -243,12 +250,12 @@ void	display_cards(t_player *player, t_player *dealer)
 		for (int curr_hand = 0; curr_hand < player->n_hands; curr_hand += 2)
 		{
 			if (player->hands[curr_hand + 1].n_cards != 0)
-				print_split_hands(&player->hands[curr_hand], &player->hands[curr_hand + 1], curr_hand / 2);
+				print_split_hands(&player->hands[curr_hand], &player->hands[curr_hand + 1], curr_hand / 2, player->curr_hand + 1);
 			else
-				print_split_hands(&player->hands[curr_hand], NULL, curr_hand / 2);
-			printf("\n");
+				print_split_hands(&player->hands[curr_hand], NULL, curr_hand / 2, player->curr_hand + 1);
 		}
 	}
+	printf("\n");
 /*
 	for (int curr_hand = 0; curr_hand < player->n_hands; curr_hand++)
 	{

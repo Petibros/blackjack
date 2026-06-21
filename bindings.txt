@@ -1,5 +1,6 @@
 single-key action binding
 
+SWITCH = 'w'
 STAND = 's'
 SPLIT = 'p'
 HIT = 'h'
