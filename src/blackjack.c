@@ -9,8 +9,8 @@ int	main()
 	t_card		*deck[DECK_CARDS * N_DECKS];
 	t_player	dealer, player;
 	t_bindings	bindings;
-	char		buf[3];
-	
+
+	player.last_bet = -1;
 	player.money = 500;
 	
 	if  (gen_seed() == 1)
@@ -21,10 +21,15 @@ int	main()
 		return (1);
 	}
 
-	do
+	while (1)
 	{
 		reset_player(&player);
 		reset_player(&dealer);
+		
+		show_rules();
+		//asks for wanted bet amount or quit
+		if (bet(&player) == -1)
+			break ;
 		
 		//deck creation and shuffle
 		if (new_deck(&deck) == 1)
@@ -32,11 +37,7 @@ int	main()
 			free_cards(&deck, &player, &dealer);
 			return (1);
 		}
-		shuffle_deck(&deck);
-		
-		show_rules();
-		//asks for wanted bet amount
-		bet(&player);
+		shuffle_deck(&deck);		
 
 		//deals 2 cards to the player and 1 to the dealer (NO HOLE CARD RULE)
 		deal_card(&deck, &player.hands[0], 2);					
@@ -60,9 +61,6 @@ int	main()
 
 		//frees cards for this turn
 		free_cards(&deck, &player, &dealer);
-
-		printf("\nContinue ? : [Y/n]\n");
-		read(0, buf, 2);
-		buf[2] = 0;
-	} while ((strncmp(buf, "y\n", 2) == 0 || strncmp(buf, "Y\n", 2) == 0 || strncmp(buf, "\n", 1) == 0) && player.money > 0);	
+	}
+	return (0);
 }

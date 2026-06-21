@@ -89,7 +89,7 @@ static void	print_split_hands(t_hand *first, t_hand *second, int pair)
 	if (!first)
 		return ;
 
-	//display total_value and padding for the text
+	//displays total_value and padding for the text
 	printf("HAND %d = %d", 1 + pair * 2, first->total_value);
 	if (first->total_value / 10 >= 1)
 		padding_text--;
@@ -101,12 +101,13 @@ static void	print_split_hands(t_hand *first, t_hand *second, int pair)
 	if (second != NULL)
 	{
 		add_padding(padding_text);
-		printf("HAND %d = %d   ", 2 + pair * 2, second->total_value);
+		printf("HAND %d = %d", 2 + pair * 2, second->total_value);
 		if (second->has_ace > 0 && second->total_value + 10 <= 21)
 			printf("/%d", second->total_value + 10);
 	}
 	printf("\n");
 
+	//displays by pair of two hands so -> all first then padding then all second
 	for (int i = 0; i < first->n_cards; i++)
 		printf("\033[30;47m┌────────┐\033[0m  ");
 	if (second != NULL)

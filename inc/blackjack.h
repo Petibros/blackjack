@@ -53,6 +53,7 @@ typedef struct s_player
 	int				curr_hand;
 	int				money;
 	int				n_hands;
+	int				last_bet;
 
 	struct s_hand	hands[4];
 }	t_player;
@@ -66,7 +67,7 @@ void	reset_player(t_player *player);								//sets all values to default
 int		new_deck(t_card *(*new_deck)[DECK_CARDS * N_DECKS]);		//creates a deck of n_cards = DECK_CARDS * N_DECKS
 t_card	*new_card( int rank, int type );							//allocs and sets value for a t_card *
 void	shuffle_deck(t_card *(*new_deck)[DECK_CARDS * N_DECKS]);	//swaps a deck's content <n_cards> times in ascending order with a random card
-void	bet(t_player *player);										//ASKS the user for a bet amount, 0 < bet <= player.money
+int		bet(t_player *player);										//ASKS the user for a bet amount, 0 < bet <= player.money
 
 //game_turn.c
 int		player_turn(t_player *player, t_card *(*deck)[DECK_CARDS * N_DECKS], t_player *dealer, t_bindings *bindings);//takes user input and applies it

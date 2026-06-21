@@ -1,6 +1,7 @@
 
 #include "blackjack.h"
 #include <stdlib.h>
+#include <string.h>
 #include <strings.h>
 
 void	shuffle_deck(t_card *(*new_deck)[DECK_CARDS * N_DECKS])
@@ -91,22 +92,37 @@ void	reset_player(t_player *player)
 	}
 }
 
-void	bet(t_player *player)
+int	bet(t_player *player)
 {
 	char	buf[16];
 	int		bet;
 
-	//asks wanted bet_amount until user's input is valid
+	//asks wanted bet_amount until user's input is valid or 'q' to quit
 	while (1)
 	{
-		printf("MONEY : %d, your BET ?\n", player->money);
+		if (player->last_bet > player->money || player->last_bet <= 0)
+			printf("MONEY : %d, your BET ?     ALL-IN : 'a' QUIT : 'q'\n", player->money);
+		else
+			printf("MONEY : %d, your BET ?     ALL-IN : 'a' LAST BET (%d) : 'l' QUIT : 'q'\n", player->money, player->last_bet);
+		
 		read(0, buf, 16);
-		bet = atoi(buf);
+		
+		if (strncmp(buf, "q\n", 2) == 0)
+			return (-1);
+		else if (strncmp(buf, "a\n", 2) == 0)
+			bet = player->money;
+		else if (strncmp(buf, "l\n", 2) == 0)
+			bet = player->last_bet;
+		else
+			bet = atoi(buf);
+		
 		if (bet > 0 && bet <= player->money)
 		{
 			player->money -= bet;
 			player->hands[0].bet_amount = bet;
+			player->last_bet = bet;
 			break ;
 		}
 	}
+	return (0);
 }
