@@ -1,4 +1,5 @@
 #include "blackjack.h"
+#include <stdio.h>
 
 static char*	get_type(int type)
 {
@@ -75,6 +76,103 @@ static char*	get_rank(int rank, int pos)
 	return ("0");
 }
 
+static void	add_padding(int n_spaces)
+{	
+	for (int n = 0 ; n < n_spaces; n++)
+		printf(" ");
+}
+
+static void	print_split_hands(t_hand *first, t_hand *second, int pair)
+{
+	int	padding_text = 88;
+
+	if (!first)
+		return ;
+
+	//display total_value and padding for the text
+	printf("HAND %d = %d", 1 + pair * 2, first->total_value);
+	if (first->total_value / 10 >= 1)
+		padding_text--;
+	if (first->has_ace > 0 && first->total_value + 10 <= 21)
+	{
+		printf("/%d", first->total_value + 10);
+		padding_text -= 3;
+	}
+	if (second != NULL)
+	{
+		add_padding(padding_text);
+		printf("HAND %d = %d   ", 2 + pair * 2, second->total_value);
+		if (second->has_ace > 0 && second->total_value + 10 <= 21)
+			printf("/%d", second->total_value + 10);
+	}
+	printf("\n");
+
+	for (int i = 0; i < first->n_cards; i++)
+		printf("\033[30;47m┌────────┐\033[0m  ");
+	if (second != NULL)
+	{
+		add_padding(100 - first->n_cards * 12 - 2);
+		for (int i = 0; i < second->n_cards; i++)
+			printf("\033[30;47m┌────────┐\033[0m  ");
+	}
+	printf("\n");
+	for (int i = 0; i < first->n_cards; i++)
+		printf("\033[30;47m│%s      │\033[0m  ", get_rank(first->cards[i]->rank, 1));
+	if (second != NULL)
+	{
+		add_padding(100 - first->n_cards * 12 - 2);
+		for (int i = 0; i < second->n_cards; i++)
+			printf("\033[30;47m│%s      │\033[0m  ", get_rank(second->cards[i]->rank, 1));
+	}
+	printf("\n");
+	for (int i = 0; i < first->n_cards; i++)
+		printf("\033[30;47m│        │\033[0m  ");
+	if (second != NULL)
+	{
+		add_padding(100 - first->n_cards * 12 - 2);
+		for (int i = 0; i < second->n_cards; i++)
+			printf("\033[30;47m│        │\033[0m  ");
+	}
+	printf("\n");
+	for (int i = 0; i < first->n_cards; i++)
+		printf("\033[30;47m│   %s   │\033[0m  ", get_type(first->cards[i]->type));
+	if (second != NULL)
+	{
+		add_padding(100 - first->n_cards * 12 - 2);
+		for (int i = 0; i < second->n_cards; i++)
+			printf("\033[30;47m│   %s   │\033[0m  ", get_type(second->cards[i]->type));
+	}
+	printf("\n");
+	for (int i = 0; i < first->n_cards; i++)
+		printf("\033[30;47m│        │\033[0m  ");
+	if (second != NULL)
+	{
+		add_padding(100 - first->n_cards * 12 - 2);
+		for (int i = 0; i < second->n_cards; i++)
+			printf("\033[30;47m│        │\033[0m  ");
+	}
+	printf("\n");
+	for (int i = 0; i < first->n_cards; i++)
+		printf("\033[30;47m│      %s│\033[0m  ", get_rank(first->cards[i]->rank, 2));
+	if (second != NULL)
+	{
+		add_padding(100 - first->n_cards * 12 - 2);
+		for (int i = 0; i < second->n_cards; i++)
+			printf("\033[30;47m│      %s│\033[0m  ", get_rank(second->cards[i]->rank, 2));
+	}
+	printf("\n");
+	for (int i = 0; i < first->n_cards; i++)
+		printf("\033[30;47m└────────┘\033[0m  ");
+	if (second != NULL)
+	{
+		add_padding(100 - first->n_cards * 12 - 2);
+		for (int i = 0; i < second->n_cards; i++)
+			printf("\033[30;47m└────────┘\033[0m  ");
+	}
+	printf("\n");
+
+}
+
 static void	print_hand(t_hand *hand)
 {
 	for (int i = 0; i < hand->n_cards; i++)
@@ -126,11 +224,31 @@ void	display_cards(t_player *player, t_player *dealer)
 	if (dealer->hands[0].has_ace > 0 && dealer->hands[0].total_value + 10 <= 21)
 		printf("/%d", dealer->hands[0].total_value + 10);
 	printf("\n");
-
 	print_hand(&dealer->hands[0]);
 	
-
-	printf("\nPLAYER : \n");
+	//if player has only one hand, displays in the normal size, else tinier format
+	if (player->n_hands == 1)
+	{
+		printf("\nPLAYER = %d", player->hands[0].total_value);
+		//chooses the displayed total value depending on the aces
+		if (player->hands[0].has_ace > 0 && player->hands[0].total_value + 10 <= 21)
+			printf("/%d", player->hands[0].total_value + 10);
+		printf("\n");
+		print_hand(&player->hands[0]);
+	}
+	else
+	{
+		printf("\nPLAYER : \n");
+		for (int curr_hand = 0; curr_hand < player->n_hands; curr_hand += 2)
+		{
+			if (player->hands[curr_hand + 1].n_cards != 0)
+				print_split_hands(&player->hands[curr_hand], &player->hands[curr_hand + 1], curr_hand / 2);
+			else
+				print_split_hands(&player->hands[curr_hand], NULL, curr_hand / 2);
+			printf("\n");
+		}
+	}
+/*
 	for (int curr_hand = 0; curr_hand < player->n_hands; curr_hand++)
 	{
 		printf("HAND %d = %d", curr_hand + 1, player->hands[curr_hand].total_value);
@@ -142,7 +260,7 @@ void	display_cards(t_player *player, t_player *dealer)
 
 		print_hand(&player->hands[curr_hand]);
 		printf("\n");
-	}	
+	}	*/
 }
 
 void	show_rules(void)

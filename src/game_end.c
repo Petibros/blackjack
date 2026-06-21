@@ -19,6 +19,7 @@ void	give_result(t_player *player, t_player *dealer)
 	
 	int	player_res[4];
 
+	printf("\n");
 	//does the same for all hands in play
 	for (int i = 0; i < player->n_hands; i++)
 	{
@@ -48,7 +49,7 @@ void	give_result(t_player *player, t_player *dealer)
 		else if (player_res[i] == dealer_res && player_res[i] != -1)
 		{
 			//draw -> bet refund
-			player->money += player->hands[i].bet_amount;
+			earnings += player->hands[i].bet_amount;
 			printf("HAND %d : PUSH\n", i + 1);
 		}
 		else

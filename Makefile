@@ -7,6 +7,7 @@ NAME = blackjack
 C_FILES = src/blackjack.c \
 		  src/game_prep.c \
 		  src/game_turn.c \
+		  src/game_start.c \
 		  src/display.c \
 		  src/game_end.c
 

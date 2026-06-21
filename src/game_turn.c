@@ -132,14 +132,12 @@ int	player_turn(t_player *player, t_card *(*deck)[DECK_CARDS * N_DECKS], t_playe
 		if (last_move != 1)
 			sleep(1);
 		//at the end of the current hand, if a split has occured, the second card is dealt to the new hand
-		deal_card(deck, &player->hands[player->curr_hand + 1], 1);
+		player->curr_hand += 1;
+		deal_card(deck, &player->hands[player->curr_hand], 1);
 		display_cards(player, dealer);
 		//checks for an aces split
-		if (player->hands[player->curr_hand + 1].cards[0]->rank != ACE)
-		{
-			player->curr_hand += 1;
+		if (player->hands[player->curr_hand].cards[0]->rank != ACE)
 			player_turn(player, deck, dealer, bindings);
-		}
 	}
 
 	return (last_move);
