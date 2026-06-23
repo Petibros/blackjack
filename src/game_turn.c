@@ -182,6 +182,7 @@ int	player_turn(t_player *player, t_card *(*deck)[DECK_CARDS * N_DECKS], t_playe
 		else if (player->n_hands > 1 && is_switch(buf, bindings->SWITCH))
 		{
 			choose_hand(player, bindings);
+			display_cards(player, dealer);
 			last_move = 5;
 		}
 	}
