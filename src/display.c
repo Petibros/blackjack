@@ -256,25 +256,11 @@ void	display_cards(t_player *player, t_player *dealer)
 		}
 	}
 	printf("\n");
-/*
-	for (int curr_hand = 0; curr_hand < player->n_hands; curr_hand++)
-	{
-		printf("HAND %d = %d", curr_hand + 1, player->hands[curr_hand].total_value);
-		
-		//chooses the displayed total value depending on the aces
-		if (player->hands[curr_hand].has_ace > 0 && player->hands[curr_hand].total_value + 10 <= 21)
-			printf("/%d", player->hands[curr_hand].total_value + 10);
-		printf("\n");
-
-		print_hand(&player->hands[curr_hand]);
-		printf("\n");
-	}	*/
 }
 
 void	show_rules(void)
 {
-	printf(" ____________________________        ______________________\n");
-	printf("/                            \\      /                      \\\n");
-	printf("|  DEALER stands on soft 17  |      |  BLACKJACK pays 3:2  |\n");
-	printf("\\____________________________/      \\______________________/\n\n");
+	printf("								\033[97;42m┌────────────────────────────┐\033[0m      \033[97;42m┌──────────────────────┐\033[0m\n");
+	printf("								\033[97;42m│  DEALER stands on soft 17  │\033[0m      \033[97;42m│  BLACKJACK pays 3:2  │\033[0m\n");
+	printf("								\033[97;42m└────────────────────────────┘\033[0m      \033[97;42m└──────────────────────┘\033[0m\n\n");
 }

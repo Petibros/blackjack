@@ -102,10 +102,16 @@ int	bet(t_player *player)
 	while (1)
 	{
 		if (player->last_bet > player->money || player->last_bet <= 0)
-			printf("MONEY : %d, your BET ?     ALL-IN : 'a' QUIT : 'q'\n", player->money);
+		{
+			printf("											   MONEY : %d\n", player->money);
+			printf("									    ALL-IN : 'a'	|	 QUIT : 'q'\n");
+		}
 		else
-			printf("MONEY : %d, your BET ?     ALL-IN : 'a' LAST BET (%d) : 'l' QUIT : 'q'\n", player->money, player->last_bet);
-		
+		{
+			printf("											   MONEY : %d\n", player->money);
+			printf("									  ALL-IN : 'a' | LAST BET (%d) : 'l' | QUIT : 'q'\n", player->last_bet);
+		}
+
 		read(0, buf, 16);
 		
 		if (strncmp(buf, "q\n", 2) == 0)
